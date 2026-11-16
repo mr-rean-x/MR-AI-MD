@@ -1,16 +1,16 @@
 {
   "dependencies": {
     "@distube/ytdl-core": "^5.2.1",
-    "@whiskeysockets/baileys": "^6.7.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "ffmpeg-static": "^5.2.0",
     "pino": "^9.3.2",
-    "qrcode-terminal": "^0.12.0"
+    "qrcode-terminal": "^0.12.0",
+    "mr-rean-baileys": "github:mr-rean-x/Baileys#master"
   },
-  "description": "MR AI MD — an original WhatsApp bot built from scratch on Baileys. Own code, own commands, Railway-ready.",
+  "description": "MR AI MD — an original WhatsApp bot built from scratch on MR REAN Baileys (own fork). Own code, 170+ commands, Railway-ready.",
   "engines": {
-    "node": ">=18"
+    "node": ">=22.12"
   },
   "license": "MIT",
   "main": "index.js",
@@ -18,5 +18,5 @@
   "scripts": {
     "start": "node index.js"
   },
-  "version": "1.0.0"
+  "version": "2.0.0"
 }

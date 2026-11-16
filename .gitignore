@@ -3,4 +3,5 @@ session/
 .env
 *.log
 tmp/
-.DS_Store
+.DS_Storesetting.json
+test_all_result*.json

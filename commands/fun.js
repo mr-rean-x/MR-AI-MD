@@ -43,7 +43,7 @@ module.exports = [
   },
   {
     name: 'quote',
-    aliases: ['motivation'],
+    aliases: ['motivation', 'quotes'],
     category: 'Fun',
     desc: 'Ekta sundor quote dey',
     usage: '.quote',
@@ -51,7 +51,7 @@ module.exports = [
   },
   {
     name: '8ball',
-    aliases: ['ask'],
+    aliases: ['ask', 'jadu'],
     category: 'Fun',
     desc: 'Tomar proshner uttor dey (moja kore)',
     usage: '.8ball ami ki exam-e pass korbo?',
@@ -62,7 +62,7 @@ module.exports = [
   },
   {
     name: 'coin',
-    aliases: ['flip'],
+    aliases: ['flip', 'coinflip'],
     category: 'Fun',
     desc: 'Coin toss kore — Head na Tail',
     usage: '.coin',

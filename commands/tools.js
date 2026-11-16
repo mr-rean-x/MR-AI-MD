@@ -60,7 +60,7 @@ module.exports = [
   },
   {
     name: 'weather',
-    aliases: ['abohawa'],
+    aliases: ['abohawa', 'weather2', 'weatherinfo'],
     category: 'Tools',
     desc: 'Kono shohor-er abohawa janai',
     usage: '.weather Dhaka',
@@ -87,42 +87,5 @@ module.exports = [
         await ctx.reply('❌ Abohawa pawa jay nai. Shohor-er naam thik ache kina check koro.');
       }
     },
-  },
-  {
-    name: 'ai',
-    aliases: ['askai', 'gpt'],
-    category: 'Tools',
-    desc: 'AI-er sathe kotha bolo (Groq)',
-    usage: '.ai Bangladesh-er rajdhani kothay?',
-    async run(ctx) {
-      if (!ctx.text) return ctx.reply('❓ Kichu jiggesh koro. Jemon: .ai Bangladesh-er rajdhani kothay?');
-      const key = ctx.config.groqApiKey;
-      if (!key) return ctx.reply('⚠️ AI chalate GROQ_API_KEY lage.\nRailway Variables-e GROQ_API_KEY bosao (console.groq.com theke free key neya jay), tarpor bot restart koro.');
-      try {
-        const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'llama-3.1-8b-instant',
-            messages: [
-              { role: 'system', content: 'Tumi ekta helpful WhatsApp assistant. Choto ar sohoj vashay uttor dao. User Banglish-e likhle Banglish-e uttor dao.' },
-              { role: 'user', content: ctx.text },
-            ],
-            max_tokens: 800,
-            temperature: 0.7,
-          }),
-          signal: AbortSignal.timeout(30000),
-        });
-        if (r.status === 401) {
-          return ctx.reply('❌ GROQ_API_KEY-ta vul mone hocche. Railway Variables-e notun key bosao.');
-        }
-        if (!r.ok) throw new Error('groq error ' + r.status);
-        const data = await r.json();
-        const ans = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
-        await ctx.reply(ans ? `🤖 ${ans.trim()}` : '❌ AI kono uttor dey nai. Abar try koro.');
-      } catch (e) {
-        await ctx.reply('❌ AI-er sathe connect kora jay nai. Ektu por abar try koro.');
-      }
-    },
-  },
+  }
 ];

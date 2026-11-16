@@ -1,32 +1,52 @@
 # MR AI MD 🤖
 
-Ekdom nijer hate lekha WhatsApp bot — **Baileys** library diye banano.
+Ekdom nijer hate lekha WhatsApp bot — **nijer Baileys fork** (MR REAN Baileys, v6.7.24-mr.1) diye banano.
 Kono ready-made bot (REAN MD, Shadow MD ba onno kono) er code ekhane nai.
 Sob command ei repo-r nijer code.
 
-## Command list (22 ta)
+## Nijer Baileys fork 🔧
 
-| Category | Command | Kaj |
+Bot-ta chole **mr-rean-baileys** diye — Baileys-er nijer fork:
+- 🔗 Repo: https://github.com/mr-rean-x/Baileys
+- 📦 Package: `mr-rean-baileys` v6.7.24-mr.1 (v6.7.24 base)
+- 🏷️ Default browser label: `MR AI MD`
+- Install: `npm install github:mr-rean-x/Baileys`
+
+## Command list (316 ta unique, 546 ta naam+alias, 10 category)
+
+| Category | Command-er dhoron | Koyta |
 |---|---|---|
-| General | `.menu` | Sob command-er list |
-| General | `.ping` | Bot kotota fast |
-| General | `.alive` | Bot online ache kina |
-| General | `.owner` | Owner-er number |
-| General | `.info` | Bot-er bepare |
-| Fun | `.joke` | Moja-r joke |
-| Fun | `.quote` | Sundor quote |
-| Fun | `.8ball <proshno>` | Moja kore uttor dey |
-| Fun | `.coin` / `.dice` | Coin toss / dice |
-| Tools | `.sticker` | Chobi/video theke sticker |
-| Tools | `.toimg` | Sticker theke chobi |
-| Tools | `.wiki <bishoy>` | Wikipedia theke khuje dey |
-| Tools | `.weather <shohor>` | Abohawa janai |
-| Tools | `.ai <proshno>` | AI-er sathe kotha (Groq key lage) |
-| Download | `.play <gan>` | YouTube theke gan pathai (audio) |
-| Group | `.tagall` | Sobaike tag kore |
-| Group | `.kick` / `.add` | Member ber kore / add kore |
-| Group | `.promote` / `.demote` | Admin banai / admin pod kate |
-| Group | `.groupinfo` | Group-er bepare janai |
+| General | `.menu` `.ping` `.alive` `.owner` `.info` | 5 |
+| AI | `.ai` `.gpt` `.groq` `.llama` `.mistral` `.deepseek` `.gemini` `.text2img` `.toanime` `.cartoon` | 10 |
+| Search | `.google` `.image` `.define` `.lyrics` `.news` `.recipe` `.github` `.iplookup` `.myip` `.animesearch` `.tiktokstalk` | 11 |
+| Download | `.play` `.ytmp4` `.tiktok` | 3 |
+| Tools | `.sticker` `.toimg` `.wiki` `.weather` `.ssweb` `.qr` `.readqr` `.tourl` `.tomp3` `.tomp4` `.tts` `.tovn` `.enhance` `.upscale` `.dehaze` `.blur` `.take` `.emoji` `.shortlink` `.translate` `.currency` `.calc` `.quran` `.prayertime` `.wallpaper` `.getpp` `.contact` `.whoami` `.read` `.jid` | 30 |
+| Fun | `.joke` `.quote` `.8ball` `.coin` `.dice` `.slot` `.tictactoe` `.rps` `.wordchain` `.guess` `.truth` `.dare` `.riddle` `.trivia` `.ship` `.pickupline` `.compliment` `.roast` `.fact` `.catfact` `.dogfact` `.dadjoke` `.advice` `.meme` `.poem` + 7 ta fun check (`.gaycheck` `.coolcheck` ...) | 32 |
+| Anime | `.waifu` `.neko` `.husbu` `.maid` + 30 ta reaction gif (`.hug` `.kiss` `.slap` `.pat` ...) | 34 |
+| Logo | `.logo` + 17 ta style (`.neontext` `.glitchtext` `.3dtext` `.goldtext` ...) + `.gfx1`–`.gfx11` | 29 |
+| Group | `.tagall` `.hidetag` `.kick` `.add` `.promote` `.demote` `.groupinfo` `.setname` `.setdesc` `.setppgc` `.linkgc` `.resetlink` `.listadmin` `.close` `.open` `.closetime` `.opentime` `.leave` `.creategroup` `.join` `.antilink` `.welcome` `.goodbye` `.warn` `.resetwarn` `.poll` `.delete` `.pin` | 28 |
+| Owner | `.addowner` `.delowner` `.addprem` `.delprem` `.listprem` `.setppbot` `.setbio` `.restart` `.public` `.self` `.autoread` `.setprefix` `.afk` `.block` `.unblock` `.debug` `.test` `.cleartmp` `.poststatus` `.react` `.runtime` `.script` | 23 |
+
+Sob command VM-e test kora hoyeche (live API soho). Prottek command-er usage dekhte `.menu` likho.
+
+### REAN MD-er command niye ekta sotyi kotha
+REAN MD-te 608 ta command chilo — sobgulo ekhane ana hoy nai, karon:
+- **Kichu command khotikor:** `ccgen` (fake card banano), `cnicinfo` / `siminfo` (onner personal info), `broadcast` (mass message spam), `kickall` / `promoteall` (ekbare sobai-ke kick) — egulo banano hoy nai.
+- **Kichu command-er API more geche:** logo/text API, FB/IG downloader — egulor bodle kaj-kora free API diye notun kore banano hoyeche (Pollinations, tikwm, Wallhaven...).
+- **Duplicate:** `menu2` / `allmenu` / `listmenu` / `mymenu` — sob `.menu`-er alias hisebe ache.
+
+## Bot-er vitore ki ki bosano jay (config.js)
+
+| Jinish | Kothay bosabe |
+|---|---|
+| Owner number | Railway Variable `OWNER_NUMBER` (jemon: `8801956501630`) — ar `.addowner` diye aro owner jog kora jay |
+| Bot-er chobi | Railway Variable `BOT_PHOTO` — image URL ba `./assets/bot.jpg`. Menu ar `.alive`-e asbe |
+| Bot-er naam | `BOT_NAME` |
+| Prefix | `PREFIX` (ba `.setprefix` diye chat thekei bodlano jay) |
+| AI key | `GROQ_API_KEY` (.ai/.gpt/.llama/.mistral/.deepseek) ar `GEMINI_API_KEY` (.gemini) |
+| Pair number | `PAIR_NUMBER` (secondary number use kora valo) |
+
+Aro setting (chat thekei): `.antilink on/off`, `.welcome on/off`, `.goodbye on/off`, `.public` / `.self`, `.autoread on/off`, `.afk <karon>` — egulo `setting.json`-e save thake.
 
 ## Railway-te deploy (A to Z)
 
@@ -43,8 +63,10 @@ Sob command ei repo-r nijer code.
 | `OWNER_NUMBER` | Tomar number, country code soho, + chara. Jemon: `8801956501630` |
 | `PAIR_NUMBER` | Je number diye bot pair hobe (secondary number use kora valo). Jemon: `8801XXXXXXXXX` |
 | `BOT_NAME` | Bot-er naam (na bosale `MR AI MD`) |
+| `BOT_PHOTO` | Bot-er chobi-r image URL (na bosale menu sudhu text-e asbe) |
 | `PREFIX` | Command-er chinno (na bosale `.`) |
-| `GROQ_API_KEY` | Sudhu `.ai` command-er jonno. [console.groq.com](https://console.groq.com) theke free key neya jay. Na bosale baki sob command cholbe, sudhu `.ai` cholbe na. |
+| `GROQ_API_KEY` | `.ai` / `.gpt` / `.llama` / `.mistral` / `.deepseek` command-er jonno. [console.groq.com](https://console.groq.com) theke free key neya jay. Na bosale baki sob command cholbe, sudhu AI command gulo cholbe na. |
+| `GEMINI_API_KEY` | Sudhu `.gemini` command-er jonno. [aistudio.google.com](https://aistudio.google.com) theke free key neya jay. |
 
 3. **Deploy / Redeploy** dao.
 
@@ -66,6 +88,8 @@ npm install
 cp .env.example .env
 # .env-e OWNER_NUMBER ar PAIR_NUMBER bosao
 node index.js
+# Sob command test korte:
+node test_all.js
 ```
 
 ## Sotorkota
@@ -77,12 +101,23 @@ node index.js
 ## File structure
 ```
 index.js            — connect + pairing + message handler + status website
-config.js           — sob setting (env theke)
+config.js           — sob setting (env theke) — owner number, bot photo ekhane
 lib/loader.js       — command load kore
-lib/helpers.js      — media download + sticker banano
+lib/helpers.js      — media download + sticker + ffmpeg convert
+lib/settings.js     — setting.json save kore (prefix, antilink, welcome, warn, afk...)
 commands/general.js — menu, ping, alive, owner, info
-commands/fun.js     — joke, quote, 8ball, coin, dice
-commands/tools.js   — sticker, toimg, wiki, weather, ai
+commands/ai.js      — gpt, groq, llama, mistral, deepseek, gemini, text2img...
+commands/search.js  — google, image, define, lyrics, news, recipe, github...
 commands/download.js— play (YouTube audio)
+commands/media.js   — ytmp4, tiktok, ssweb, qr, tourl, tomp3, tts, enhance...
+commands/fun.js     — joke, quote, 8ball, coin, dice
+commands/fun2.js    — slot, tictactoe, rps, truth, dare, ship, meme, poem...
+commands/anime.js   — waifu, neko + 30 ta reaction gif
+commands/logo.js    — logo + style + gfx1-11
+commands/tools.js   — sticker, toimg, wiki, weather
 commands/group.js   — tagall, kick, add, promote, demote, groupinfo
+commands/group2.js  — hidetag, setname, antilink, welcome, warn, poll...
+commands/owner.js   — addowner, setppbot, restart, public, self, setprefix...
+commands/utility2.js— shortlink, translate, currency, calc, quran, wallpaper
+test_all.js         — sob command-er test (VM-e chalano jay)
 ```

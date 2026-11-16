@@ -1,6 +1,7 @@
 // General command — menu, ping, alive, owner, info.
 // Sob text ekhanei lekha; kono onno bot-er menu copy kora hoy nai.
 const { getAllCommands } = require('../lib/loader');
+const { sendWithPhoto } = require('../lib/helpers');
 
 function uptimeText(ms) {
   const s = Math.floor(ms / 1000);
@@ -13,7 +14,7 @@ function uptimeText(ms) {
 module.exports = [
   {
     name: 'menu',
-    aliases: ['help', 'commands'],
+    aliases: ['help', 'commands', 'menu2', 'allmenu', 'listmenu', 'mymenu', 'aimenu', 'animemenu', 'funmenu', 'gamemenu', 'groupmenu', 'imagemenu', 'logomenu', 'miscmenu', 'ownermenu', 'utilitymenu', 'voicemenu', 'downloadmenu', 'stickermenu'],
     category: 'General',
     desc: 'Sob command-er list dekhai',
     usage: '.menu',
@@ -38,7 +39,8 @@ module.exports = [
         }
       }
       out += `\nJemon: ${prefix}ping, ${prefix}sticker, ${prefix}ai hi`;
-      await reply(out);
+      // Bot-er chobi set kora thakle chobi soho menu asbe (config.js / BOT_PHOTO)
+      await sendWithPhoto(ctx.sock, ctx.jid, out, ctx.msg, config);
     },
   },
   {
@@ -62,7 +64,8 @@ module.exports = [
     usage: '.alive',
     async run(ctx) {
       const s = Math.floor(process.uptime());
-      await ctx.reply(`🤖 *${ctx.config.botName}* online ache!\nUptime: ${uptimeText(s * 1000)}\nPrefix: ${ctx.prefix} • ${ctx.prefix}menu likhe sob command dekho.`);
+      const text = `🤖 *${ctx.config.botName}* online ache!\nUptime: ${uptimeText(s * 1000)}\nPrefix: ${ctx.prefix} • ${ctx.prefix}menu likhe sob command dekho.`;
+      await sendWithPhoto(ctx.sock, ctx.jid, text, ctx.msg, ctx.config);
     },
   },
   {
@@ -87,8 +90,8 @@ module.exports = [
     async run(ctx) {
       await ctx.reply(
         `🤖 *${ctx.config.botName}*\n` +
-        `Version: 1.0.0\n` +
-        `Library: Baileys (WhatsApp Web API)\n` +
+        `Version: 2.0.0\n` +
+        `Library: MR REAN Baileys (nijer fork — mr-rean-x/Baileys, v6.7.24-mr.1)\n` +
         `Owner: ${ctx.config.ownerName}\n` +
         `Commands: ${getAllCommands().length} ta\n` +
         `Prefix: ${ctx.prefix}\n\n` +

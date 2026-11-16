@@ -116,7 +116,7 @@ module.exports = [
   },
   {
     name: 'groupinfo',
-    aliases: ['ginfo'],
+    aliases: ['ginfo', 'gcstatus', 'groupstatus'],
     category: 'Group',
     desc: 'Group-er bepare janai',
     usage: '.groupinfo',

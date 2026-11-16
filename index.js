@@ -12,10 +12,24 @@ const {
   useMultiFileAuthState,
   DisconnectReason,
   fetchLatestBaileysVersion,
-} = require('@whiskeysockets/baileys');
+  MR_REAN_BAILEYS_VERSION,
+} = require('mr-rean-baileys');
 const config = require('./config');
 const { loadCommands, getAllCommands } = require('./lib/loader');
 const { getSender, isOwnerNumber } = require('./lib/helpers');
+const { settings, saveSettings } = require('./lib/settings');
+
+// Nijer Baileys fork-er version (mr-rean-x/Baileys)
+console.log(`[MR AI MD] Baileys: MR REAN custom v${MR_REAN_BAILEYS_VERSION || '6.7.24-mr.1'}`);
+
+function effectivePrefix() {
+  return settings.prefix || config.prefix;
+}
+
+function isOwner(sender, senderNumber) {
+  return isOwnerNumber(sender, config.ownerNumber)
+    || (settings.owners || []).includes(senderNumber);
+}
 
 const startedAt = Date.now();
 const commands = loadCommands(path.join(__dirname, 'commands'));
@@ -130,9 +144,67 @@ async function startBot() {
           || (m.imageMessage && m.imageMessage.caption)
           || (m.videoMessage && m.videoMessage.caption)
           || '';
-        if (!text.startsWith(config.prefix)) continue;
+        const jid = msg.key.remoteJid;
+        const sender = getSender(msg);
+        const senderNumber = sender.split('@')[0];
+        const isGroup = jid.endsWith('@g.us');
+        const pushName = msg.pushName || '';
+        const ctxInfo = (m.extendedTextMessage && m.extendedTextMessage.contextInfo)
+          || (m.imageMessage && m.imageMessage.contextInfo)
+          || (m.videoMessage && m.videoMessage.contextInfo)
+          || {};
+        const mentions = ctxInfo.mentionedJid || [];
+        const owner = isOwner(sender, senderNumber);
+        const reply = (t) => sock.sendMessage(jid, { text: t }, { quoted: msg });
 
-        const body = text.slice(config.prefix.length).trim();
+        // Auto-read (on thakle)
+        if (settings.autoread) {
+          try { await sock.readMessages([msg.key]); } catch (_) {}
+        }
+
+        // AFK: nije message likhle AFK off
+        if (settings.afk && settings.afk[senderNumber]) {
+          delete settings.afk[senderNumber];
+          saveSettings();
+          await reply(`👋 Welcome back, ${pushName || 'bondhu'}! AFK off hoye geche.`);
+        }
+        // AFK: keu AFK user-ke mention korle janano
+        for (const men of mentions) {
+          const menNum = men.split('@')[0];
+          if (settings.afk && settings.afk[menNum]) {
+            await reply(`💤 @${menNum} ekhon AFK. Karon: ${settings.afk[menNum].reason}`);
+            break;
+          }
+        }
+
+        // Group admin info (admin command + antilink-er jonno)
+        let isAdmin = false;
+        let isBotAdmin = false;
+        if (isGroup) {
+          try {
+            const meta = await sock.groupMetadata(jid);
+            const me = meta.participants.find((p) => p.id === sender);
+            isAdmin = !!(me && (me.admin === 'admin' || me.admin === 'superadmin'));
+            const bot = meta.participants.find((p) => p.id === sock.user.id);
+            isBotAdmin = !!(bot && (bot.admin === 'admin' || bot.admin === 'superadmin'));
+          } catch (_) {}
+        }
+
+        // Antilink: group-e link pathale delete (admin chara)
+        if (isGroup && settings.antilink && settings.antilink[jid] && !isAdmin && !owner) {
+          if (/https?:\/\/|www\./i.test(text)) {
+            try {
+              await sock.sendMessage(jid, { delete: { remoteJid: jid, fromMe: false, id: msg.key.id, participant: sender } });
+              await sock.sendMessage(jid, { text: `⚠️ @${senderNumber}, ei group-e link pathano bondho ache!`, mentions: [sender] });
+            } catch (_) {}
+            continue;
+          }
+        }
+
+        const prefix = effectivePrefix();
+        if (!text.startsWith(prefix)) continue;
+
+        const body = text.slice(prefix.length).trim();
         if (!body) continue;
         const parts = body.split(/\s+/);
         const name = parts[0].toLowerCase();
@@ -140,11 +212,8 @@ async function startBot() {
         const cmd = commands.get(name);
         if (!cmd) continue;
 
-        const jid = msg.key.remoteJid;
-        const sender = getSender(msg);
-        const isGroup = jid.endsWith('@g.us');
-        const owner = isOwnerNumber(sender, config.ownerNumber);
-        const reply = (t) => sock.sendMessage(jid, { text: t }, { quoted: msg });
+        // Self mode: sudhu owner command chalate parbe
+        if (settings.mode === 'self' && !owner) continue;
 
         if (cmd.ownerOnly && !owner) {
           await reply('❌ Ei command sudhu bot-er owner use korte parbe.');
@@ -155,10 +224,7 @@ async function startBot() {
           continue;
         }
         if (cmd.adminOnly && isGroup) {
-          const meta = await sock.groupMetadata(jid);
-          const me = meta.participants.find((p) => p.id === sender);
-          const admin = me && (me.admin === 'admin' || me.admin === 'superadmin');
-          if (!admin && !owner) {
+          if (!isAdmin && !owner) {
             await reply('❌ Ei command sudhu group admin use korte parbe.');
             continue;
           }
@@ -166,8 +232,10 @@ async function startBot() {
 
         console.log(`[cmd] ${name} — from ${sender} (${isGroup ? 'group' : 'chat'})`);
         await cmd.run({
-          sock, msg, jid, sender, isGroup, isOwner: owner,
-          args, text: args.join(' '), reply, config, prefix: config.prefix, cmdName: name,
+          sock, msg, jid, sender, senderNumber, isGroup, isOwner: owner,
+          isAdmin, isBotAdmin, mentions, pushName,
+          args, text: args.join(' '), reply, config, prefix, cmdName: name,
+          baileysVersion: MR_REAN_BAILEYS_VERSION || '6.7.24-mr.1',
         });
       } catch (e) {
         console.log(`[cmd-error] ${e && e.message ? e.message : e}`);
@@ -176,6 +244,22 @@ async function startBot() {
         } catch (_) { /* ignore */ }
       }
     }
+  });
+
+  // ---- group-e keu dhukle / ber hole welcome / goodbye ----
+  sock.ev.on('group-participants.update', async ({ id, participants, action }) => {
+    try {
+      const meta = await sock.groupMetadata(id);
+      const gname = meta.subject || 'group';
+      for (const p of participants) {
+        const num = p.split('@')[0];
+        if (action === 'add' && settings.welcome && settings.welcome[id]) {
+          await sock.sendMessage(id, { text: `👋 Welcome @${num}! *${gname}*-e asar jonno dhonnobad! 🎉\nCommand dekhte ${effectivePrefix()}menu likho.`, mentions: [p] });
+        } else if (action === 'remove' && settings.goodbye && settings.goodbye[id]) {
+          await sock.sendMessage(id, { text: `👋 @${num} group theke ber hoye geche. Bye!`, mentions: [p] });
+        }
+      }
+    } catch (_) {}
   });
 }
 

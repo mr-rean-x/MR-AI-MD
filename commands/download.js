@@ -19,7 +19,7 @@ function fmtDuration(sec) {
 module.exports = [
   {
     name: 'play',
-    aliases: ['song', 'music'],
+    aliases: ['song', 'music', 'ytmp3', 'ytaudio'],
     category: 'Download',
     desc: 'YouTube theke gan khuje audio pathai',
     usage: '.play rajkarega khalsa',
